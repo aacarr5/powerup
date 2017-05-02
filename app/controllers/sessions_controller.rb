@@ -7,16 +7,26 @@ class SessionsController < ApplicationController
 	 
 	  @authorization = Authorization.find_by_provider_and_uid(auth_hash["provider"], auth_hash["uid"])
 	  if @authorization
-	    render :text => "Welcome back #{@authorization.user.name}! You have already signed up."
+	    @user = User.find_by_email(@authorization.user.email)
+	    session[:user] = @user
+	    binding.pry
+	    redirect_to "/welcome/landing"
 	  else
 	    user = User.new :name => auth_hash["info"]["name"], :email => auth_hash["info"]["email"]
 	    user.authorizations.build :provider => auth_hash["provider"], :uid => auth_hash["uid"]
 	    user.save
 	 
-	    render :text => "Hi #{user.name}! You've signed up."
+	    render "/welcome/landing"
 	  end
 	end
 
   def failure
   end
+
+  def destroy
+	  session[:user_id] = nil
+	  session[:user] = nil
+	  redirect_to "/welcome/landing"
+	end
+
 end
