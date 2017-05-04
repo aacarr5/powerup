@@ -1,3 +1,14 @@
-Welcome! 
+PowerUp Platform 
 
-Click <%= link_to('fb login', 'auth/facebook') %> to login 
+
+<% if session[:user] %> 
+	<span> Welcome <%= session[:user]["name"] %> </span>
+<% else %>
+	<span> Click <%= link_to('fb login', '/auth/facebook') %> to login </span>
+<% end %>
+
+
+
+<% if session[:user] %> 
+	<span>Click <%= link_to('logout', '/logout') %> </span>
+<% end %>
